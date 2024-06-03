@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date and Time Inputs</title>
+  <style>
+    /* Custom CSS for styling date, time inputs, and submit button */
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="date"], input[type="time"], input[type="submit"] {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 8px;
+      width: calc(100% - 20px);
+      max-width: 300px;
+      box-sizing: border-box;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    }
+    input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="input-group">
+    <label for="date">Date:</label>
+    <input type="date" id="date">
+  </div>
+
+  <div class="input-group">
+    <label for="time">Time:</label>
+    <input type="time" id="time" step="1">
+  </div>
+
+  <div class="input-group">
+    <input type="submit" value="Submit">
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/dashboard_style_data.css">
+        <title>Dashboard</title>
+        <style>
+        body {
+        margin: 10px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+        }
+        .sidenav {
+        text-align: center;
+        height: 80%;
+        width: 300px;
+        position: fixed;
+        top: 3%;
+        left: 0;
+        background-color: #ffffff; /* background */
+        padding-top: 80px;
+        font-size: 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .sidenav a {
+        padding: 10px 5px;
+        text-decoration: none;
+        color: black;
+        display: block;
+        border-radius: 20px;
+        margin-bottom: 15px;
+        margin-top: 40px;
+        margin-left: 20px;
+        margin-right: 20px;
+        position: relative;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        }
+        .sidenav a:hover {
+        background-color: #0056b3; /* on hover */
+        }
+        #logout{
+            font-size: 20px;
+        }
+        .content {
+        margin-left: 200px;
+        padding: 20px;
+        }
+        #csv-container {
+        width: 180%; /* Adjust the width as needed */
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 50px; /* Add padding to shift content towards right */
+        margin-left: 150px;
+        }
+        #csv-container {
+        width: 80%; /* Adjust the width as needed */
+        margin: 20px auto; /* Center the container */
+        }
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        }
+        th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        }
+        th {
+        background-color: #f2f2f2;
+        }
+        .full_block {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 20px;
+        }
+        .full_block > div {
+        width: 300px;
+        height: 200px;
+        margin: 10px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        }
+        .full_block > div > span {
+        font-size: 50px;
+        font-weight: bold;
+        }
+        .full_block > div > label {
+        font-size: 20px;
+        }
+        .full_block{
+        text-align: center;
+        height: 80%;
+        width: 1500px;
+        position: fixed;
+        top: 40px;
+        left: 325px;
+        padding-bottom: 14px;
+        background-color: #ffffff; /* background */
+        padding-top: 50px;
+        font-size: 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .error-message {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f44336;
+    color: white;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    animation: fadeOut 4s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
+        </style>
+    </head>
+    <body>
+        <div class="sidenav">
+            <label>Network Systems</label>
+            <img src="imgs/img1.jpg" style="width:150px; height: 130px;">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="show_packets_live.html">Live Preview</a>
+            <a href="report.html">Reports</a>
+            <a href="aboutus.html">About us</a>
+            <div class="User"><br><br>
+                <label><b>Welcome<b></label>
+                <label><b>Pratham<b></label>
+                <a href="index.html" id="logout">Logout</a>
+            </div>
+        </div><br>
+        <div id="errorMessage" class="error-message"></div>
+
+        <div class="full_block">
+            <div class="tcpPACK"><br><br>
+                <span id="Tclck" style="font-size: 50px; font-weight: bold;"></span><br><br><br>
+                <label id="tcp">Tcp Packets</label>
+            </div>
+            <div class="udpPACK"><br><br>
+                <span id="Uclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Udp Packets</label>
+            </div>
+            <div class="icmpPACK"><br><br>
+                <span id="Iclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Icmp Packets</label>
+            </div>
+            <br>
+            <div class="httpPACK"><br><br>
+                <span id="HTclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Http Packets</label>
+            </div>
+            <div class="httpsPACK"><br><br>
+                <span id="HTPclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Https Packets</label>
+            </div>
+            <div class="dnsPACK"><br><br>
+                <span id="dnsclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Dns Packets</label>
+            </div>
+            <div class="smptPACK"><br><br>
+                <span id="smptclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Smpt Packets</label>
+            </div>
+            <div class="telnetPACK"><br><br>
+                <span id="telnetclck" style="font-size: 50px; font-weight: bold; "></span><br><br><br>
+                <label id="udp">Telnet Packets</label>
+            </div>
+        </div>
+        <script type="text/javascript" src="scripts/display_dashboard_info.js"></script>
+    </body>
+</html>
