@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CSV Viewer</title>
+        <style type="text/css">
+        th
+        {
+        text-align: center;
+        color: white;
+        padding: 15px;
+        margin-right: 12px;
+        font-size: 16px;
+        padding-left: 25px;
+        border: 1px solid #ccc; /* Border color */
+        border-radius: 8px; /* Border radius for rounded corners */
+        background-color:#007bff; /* Background color */
+        border: 1px solid #ccc;
+        }
+        .heading1 {
+        padding-left: 20px; /* Custom padding for Heading 1 */
+        }
+        .heading2 {
+        padding-left: 25px; /* Custom padding for Heading 1 */
+        }
+        .heading3 {
+        padding-left: 30px; /* Custom padding for Heading 1 */
+        }
+        .heading4 {
+        padding-left: 30px; /* Custom padding for Heading 1 */
+        }
+        .heading5 {
+        padding-left: 30px; /* Custom padding for Heading 1 */
+        }
+        .heading6 {
+        padding-left: 30px; /* Custom padding for Heading 1 */
+        }
+        .heading7 {
+        padding-left: 30px; /* Custom padding for Heading 1 */
+        }
+        .heading8 {
+        padding-left: 35px; /* Custom padding for Heading 1 */
+        }
+        .heading9 {
+        padding-left: 40px; /* Custom padding for Heading 1 */
+        }
+        .heading10 {
+        padding-left: 35px; /* Custom padding for Heading 1 */
+        }
+        .heading11 {
+        padding-left: 45px; /* Custom padding for Heading 1 */
+        }
+        .heading12 {
+        padding-left: 45px; /* Custom padding for Heading 1 */
+        }
+        .heading13 {
+        padding-left: 45px; /* Custom padding for Heading 1 */
+        }
+        .heading14 {
+        padding-left: 45px; /* Custom padding for Heading 1 */
+        }
+        #load-more-btn {
+        text-align: center;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        }
+        #load-more-btn:hover {
+        background-color: #0056b3;
+        }
+        /* CSS for the Live Packet Preview heading */
+        #lpp {
+        font-family: 'Roboto', sans-serif;
+        background-color: #007bff; /* Light blue background color */
+        color: #fff; /* White text color */
+        padding: 10px 20px; /* Padding for content */
+        border-radius: 20px; /* Rounded border */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        text-align: center; /* Center-align text */
+        margin-right: 20px;
+        }
+        .logo-container {
+        display: flex;
+        justify-content: center;
+        }
+        .logo {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #a60000; /* Light blue background color */
+        box-shadow: 0 0 20px 10px #6fa9e2; /* Glowing effect */
+        animation: glow 1.5s ease-in-out infinite alternate; /* Animation for glowing effect */
+        }
+        @keyframes glow {
+        0% {
+        box-shadow: 0 0 20px 10px #b80226; /* Initial shadow */
+        }
+        60% {
+        box-shadow: 0 0 20px 20px #f70202; /* Glowing shadow */
+        }
+        }
+        .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .button{
+        text-decoration: none;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        }
+        .button:hover {
+        background-color: #0056b3;
+        }
+        .go_back{
+            text-align: center;
+        }
+        a {
+        text-decoration: none; /* Remove underline */
+        color: inherit; /* Inherit text color */
+        }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1 id="lpp">Live Packet Preview</h1>
+            <div class="logo"></div>
+        </div>
+        <div id="csv-container"></div>
+        <div class="go_back"><br><br>
+            <a href="dashboard.html" class="button" style="text-align: center;">Go Back</a>
+            <a href="ApplicationDataManager/packet_log.csv" class="button" style="display: inline-block;">Download CSV File</a>
+        </div><br><br>
+        
+    </body>
+    <script>
+    // URL of the CSV file
+    var csvFileUrl = 'ApplicationDataManager/packet_log.csv';
+    var chunkSize = 100;
+    var currentChunk = 0;
+    var delayBetweenChunks = 10000; // 10 seconds
+    // Function to fetch and display CSV data in chunks
+    function displayCSVData() {
+    fetch(csvFileUrl)
+    .then(response => response.text())
+    .then(data => {
+    var lines = data.split('\n');
+    var headers = lines[0].split(',');
+    var html = '<thead><tr>';
+        headers.forEach(header => {
+        html += '<th style="border: 1px solid #ddd; padding: 8px;">' + header.trim() + '</th>';
+        });
+    html += '</tr></thead><tbody>';
+    var table = document.createElement('table');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.innerHTML = html;
+    // Create iframe element
+    var iframe = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '600px'; // Set desired height
+    iframe.style.border = '10px solid #ccc';
+    iframe.style.overflowY = 'auto'; // Enable vertical scrollbar
+    // Append iframe to container
+    var container = document.getElementById('csv-container');
+    if (!container) {
+    console.error('Container element not found.');
+    return;
+    }
+    container.innerHTML = '';
+    container.appendChild(iframe);
+    // Set iframe content
+    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!iframeDoc) {
+    console.error('Failed to access iframe document.');
+    return;
+    }
+    iframeDoc.open();
+    iframeDoc.write(table.outerHTML);
+    iframeDoc.close();
+    iframe.style.border = 'none'; // Remove default iframe border
+    iframe.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.1)'; // Add shadow effect
+    iframe.style.borderRadius = '8px'; // Add border radius for rounded corners
+    iframe.style.margin = '-4px'; // Negative margin to create a floating effect
+    var container = document.createElement('div');
+    container.style.textAlign = 'center';
+    var loadButton = document.createElement('button');
+    loadButton.textContent = 'Load More Packets';
+    loadButton.id = 'load-more-btn';
+    loadButton.classList.add('custom-button');
+    loadButton.style.marginTop = '20px'; // Set margin top
+    loadButton.style.textAlign = 'center';
+    document.body.appendChild(container);
+    loadButton.onclick = function() {
+    loadNextChunk(lines, headers, iframeDoc);
+    };
+    container.appendChild(loadButton);
+    })
+    .catch(error => console.error('Error fetching CSV:', error));
+    }
+    // Function to load the next chunk of data into the table
+    function loadNextChunk(lines, headers, iframeDoc) {
+    var html = '';
+    var startIndex = currentChunk * chunkSize + 1; // Skip the header row
+    var endIndex = Math.min(startIndex + chunkSize, lines.length);
+    for (var i = startIndex; i < endIndex; i++) {
+    var cells = lines[i].split(',');
+    html += '<tr>';
+        cells.forEach(cell => {
+        html += '<td style="border: 1px solid #ddd; padding: 8px;">' + cell.trim() + '</td>';
+        });
+    html += '</tr>';
+    }
+    var tableBody = iframeDoc.querySelector('table tbody');
+    tableBody.innerHTML += html;
+    currentChunk++; // Increment currentChunk
+    }
+    // Call the function to display CSV data
+    displayCSVData();
+    </script>
+</html>
